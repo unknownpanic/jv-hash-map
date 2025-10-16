@@ -5,16 +5,18 @@ import java.util.Objects;
 public class MyHashMap<K, V> implements MyMap<K, V> {
     private static final int INITIAL_CAPACITY = 16;
     private static final double LOAD_FACTOR = 0.75;
+    private static final int GROWTH_FACTOR = 2;
     private Node<K, V>[] table;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public MyHashMap() {
-        table = new Node[INITIAL_CAPACITY];
+        table = (Node<K, V>[]) new Node[INITIAL_CAPACITY];
     }
 
     @Override
     public void put(K key, V value) {
-        if (size == (table.length * LOAD_FACTOR)) {
+        if (size >= table.length * LOAD_FACTOR) {
             resize();
         }
 
@@ -63,9 +65,10 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return Objects.equals(key1, key2);
     }
 
+    @SuppressWarnings("unchecked")
     private void resize() {
         Node<K, V>[] oldTable = table;
-        table = new Node[table.length * 2];
+        table = (Node<K, V>[]) new Node[table.length * GROWTH_FACTOR];
         size = 0;
 
         for (Node<K, V> node : oldTable) {
@@ -82,7 +85,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         private V value;
         private Node<K, V> next;
 
-        Node(K key, V value) {
+        private Node(K key, V value) {
             this.key = key;
             this.value = value;
         }
